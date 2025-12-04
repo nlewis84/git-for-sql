@@ -1,4 +1,114 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* Custom theme configuration using CSS variables (Tailwind v4) */
+@theme {
+  /* Spacing scale based on Refactoring UI principles */
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+
+  /* Primary color scale (HSL) */
+  --color-primary-50: hsl(252, 70%, 98%);
+  --color-primary-100: hsl(252, 70%, 95%);
+  --color-primary-200: hsl(252, 70%, 90%);
+  --color-primary-300: hsl(252, 70%, 80%);
+  --color-primary-400: hsl(252, 70%, 70%);
+  --color-primary-500: hsl(252, 70%, 60%);
+  --color-primary-600: hsl(252, 70%, 50%);
+  --color-primary-700: hsl(252, 70%, 40%);
+  --color-primary-800: hsl(252, 70%, 30%);
+  --color-primary-900: hsl(252, 70%, 20%);
+
+  /* Purple color scale */
+  --color-purple-50: hsl(270, 50%, 98%);
+  --color-purple-100: hsl(270, 50%, 95%);
+  --color-purple-200: hsl(270, 50%, 90%);
+  --color-purple-300: hsl(270, 50%, 80%);
+  --color-purple-400: hsl(270, 50%, 70%);
+  --color-purple-500: hsl(270, 50%, 60%);
+  --color-purple-600: hsl(270, 50%, 50%);
+  --color-purple-700: hsl(270, 50%, 40%);
+  --color-purple-800: hsl(270, 50%, 30%);
+  --color-purple-900: hsl(270, 50%, 20%);
+
+  /* Success color scale (Green) */
+  --color-success-50: hsl(142, 70%, 98%);
+  --color-success-100: hsl(142, 70%, 95%);
+  --color-success-200: hsl(142, 70%, 90%);
+  --color-success-300: hsl(142, 70%, 80%);
+  --color-success-400: hsl(142, 70%, 70%);
+  --color-success-500: hsl(142, 70%, 45%);
+  --color-success-600: hsl(142, 70%, 40%);
+  --color-success-700: hsl(142, 70%, 35%);
+  --color-success-800: hsl(142, 70%, 25%);
+  --color-success-900: hsl(142, 70%, 20%);
+
+  /* Warning color scale (Amber) */
+  --color-warning-50: hsl(43, 96%, 98%);
+  --color-warning-100: hsl(43, 96%, 95%);
+  --color-warning-200: hsl(43, 96%, 90%);
+  --color-warning-300: hsl(43, 96%, 80%);
+  --color-warning-400: hsl(43, 96%, 70%);
+  --color-warning-500: hsl(43, 96%, 56%);
+  --color-warning-600: hsl(43, 96%, 50%);
+  --color-warning-700: hsl(43, 96%, 40%);
+  --color-warning-800: hsl(43, 96%, 30%);
+  --color-warning-900: hsl(43, 96%, 25%);
+
+  /* Error color scale (Red) */
+  --color-error-50: hsl(0, 84%, 98%);
+  --color-error-100: hsl(0, 84%, 95%);
+  --color-error-200: hsl(0, 84%, 90%);
+  --color-error-300: hsl(0, 84%, 80%);
+  --color-error-400: hsl(0, 84%, 70%);
+  --color-error-500: hsl(0, 84%, 60%);
+  --color-error-600: hsl(0, 84%, 50%);
+  --color-error-700: hsl(0, 84%, 40%);
+  --color-error-800: hsl(0, 84%, 30%);
+  --color-error-900: hsl(0, 84%, 25%);
+
+  /* Info color scale (Blue) */
+  --color-info-50: hsl(217, 91%, 98%);
+  --color-info-100: hsl(217, 91%, 95%);
+  --color-info-200: hsl(217, 91%, 90%);
+  --color-info-300: hsl(217, 91%, 80%);
+  --color-info-400: hsl(217, 91%, 70%);
+  --color-info-500: hsl(217, 91%, 60%);
+  --color-info-600: hsl(217, 91%, 50%);
+  --color-info-700: hsl(217, 91%, 40%);
+  --color-info-800: hsl(217, 91%, 30%);
+  --color-info-900: hsl(217, 91%, 25%);
+
+  /* Neutral color scale (Tinted Gray) */
+  --color-neutral-50: hsl(220, 15%, 98%);
+  --color-neutral-100: hsl(220, 15%, 95%);
+  --color-neutral-200: hsl(220, 15%, 90%);
+  --color-neutral-300: hsl(220, 15%, 85%);
+  --color-neutral-400: hsl(220, 15%, 70%);
+  --color-neutral-500: hsl(220, 15%, 50%);
+  --color-neutral-600: hsl(220, 15%, 40%);
+  --color-neutral-700: hsl(220, 15%, 30%);
+  --color-neutral-800: hsl(220, 15%, 20%);
+  --color-neutral-900: hsl(220, 15%, 15%);
+}
+
+/* Base styles */
+html,
+body {
+  background: linear-gradient(
+    135deg,
+    hsl(252, 40%, 96%) 0%,
+    hsl(270, 30%, 97%) 50%,
+    hsl(252, 40%, 96%) 100%
+  );
+  background-attachment: fixed;
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+  color: hsl(220, 15%, 15%);
+}
 

@@ -1,8 +1,17 @@
 import { redirect } from "react-router";
 import { json } from "~/lib/json.server";
-import { useLoaderData, useRevalidator, useFetcher } from "react-router";
+import {
+  useLoaderData,
+  useRevalidator,
+  useFetcher,
+  useNavigation,
+} from "react-router";
 import { useEffect, useState } from "react";
-import type { LoaderFunctionArgs, ActionFunctionArgs } from "react-router";
+import type {
+  LoaderFunctionArgs,
+  ActionFunctionArgs,
+  MetaFunction,
+} from "react-router";
 import {
   MagnifyingGlass,
   Clock,
@@ -18,6 +27,7 @@ import { getApprovedScripts, getScriptExecutionHistory } from "~/lib/db.server";
 import type { ApprovedScript } from "~/lib/types";
 import { getUserFromSession } from "~/lib/auth.server";
 import { getOpenPRsWithSQL } from "~/lib/github.server";
+import { ErrorBoundary } from "~/components/ErrorBoundary";
 
 type LoaderData = {
   pending: Array<
@@ -181,10 +191,38 @@ export async function loader({ request }: LoaderFunctionArgs) {
   );
 }
 
+// Meta tags for SEO
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Dashboard - Git for SQL" },
+    {
+      name: "description",
+      content: "Manage approved SQL scripts with GitHub integration",
+    },
+  ];
+};
+
+// Export ErrorBoundary for this route
+export { ErrorBoundary } from "~/components/ErrorBoundary";
+
+// Export shouldRevalidate for better cache control
+export function shouldRevalidate({ formMethod, defaultShouldRevalidate }: any) {
+  // Always revalidate after mutations (POST, PUT, DELETE)
+  if (formMethod && formMethod !== "GET") {
+    return true;
+  }
+  // Use default behavior for GET requests
+  return defaultShouldRevalidate;
+}
+
 export default function Index() {
-  const { pending, readyForProd, completed, openPRs, user } =
-    useLoaderData<LoaderData>();
+  const data = useLoaderData<LoaderData>();
+  const { pending, readyForProd, completed, openPRs, user } = data;
+  const navigation = useNavigation();
   const revalidator = useRevalidator();
+
+  // Show loading state during navigation
+  const isLoading = navigation.state === "loading";
 
   const totalScripts = pending.length + readyForProd.length + completed.length;
 
@@ -297,7 +335,7 @@ export default function Index() {
             </div>
             <div className="space-y-3 overflow-y-auto flex-1 min-h-0 pr-3">
               {openPRs.length > 0 ? (
-                openPRs.map((pr) => <PRCard key={pr.prNumber} pr={pr} />)
+                openPRs.map((pr: any) => <PRCard key={pr.prNumber} pr={pr} />)
               ) : (
                 <div className="text-neutral-400 text-sm text-center py-8">
                   No open PRs
@@ -319,7 +357,7 @@ export default function Index() {
             </div>
             <div className="space-y-3 overflow-y-auto flex-1 min-h-0 pr-3">
               {pending.length > 0 ? (
-                pending.map((script) => (
+                pending.map((script: any) => (
                   <KanbanCard
                     key={script.id}
                     script={script}
@@ -351,7 +389,7 @@ export default function Index() {
             </div>
             <div className="space-y-3 overflow-y-auto flex-1 min-h-0 pr-3">
               {readyForProd.length > 0 ? (
-                readyForProd.map((script) => (
+                readyForProd.map((script: any) => (
                   <KanbanCard
                     key={script.id}
                     script={script}
@@ -379,7 +417,7 @@ export default function Index() {
             </div>
             <div className="space-y-3 overflow-y-auto flex-1 min-h-0 pr-3">
               {completed.length > 0 ? (
-                completed.map((script) => (
+                completed.map((script: any) => (
                   <KanbanCard
                     key={script.id}
                     script={script}

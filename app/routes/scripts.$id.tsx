@@ -37,6 +37,7 @@ import {
   TableCell,
 } from "~/components/Table";
 import { DetailsDrawer } from "~/components/DetailsDrawer";
+import { LoadingSpinner } from "~/components/LoadingSpinner";
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
   // Require authentication
@@ -49,7 +50,10 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   const script = await getScriptById(scriptId);
 
   if (!script) {
-    throw new Response("Script not found", { status: 404 });
+    throw new Response("Script not found", {
+      status: 404,
+      statusText: "Script not found",
+    });
   }
 
   const history = await getScriptExecutionHistory(script.script_name);
@@ -150,9 +154,21 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 }
 
+type LoaderData = {
+  script: NonNullable<Awaited<ReturnType<typeof getScriptById>>>;
+  history: Awaited<ReturnType<typeof getScriptExecutionHistory>>;
+  user: NonNullable<Awaited<ReturnType<typeof getUserFromSession>>>;
+};
+
+type ActionData =
+  | { success: true; message: string }
+  | { success: false; error: string }
+  | undefined;
+
 export default function ScriptDetail() {
-  const { script, history, user } = useLoaderData<typeof loader>();
-  const actionData = useActionData<typeof action>();
+  const data = useLoaderData<LoaderData>();
+  const { script, history, user } = data;
+  const actionData = useActionData<ActionData>();
   const navigation = useNavigation();
   const revalidator = useRevalidator();
   const [showConfirm, setShowConfirm] = useState(false);
@@ -376,7 +392,7 @@ export default function ScriptDetail() {
               <TableHeaderCell>Results</TableHeaderCell>
             </TableHeader>
             <TableBody>
-              {history.map((entry) => (
+              {history.map((entry: any) => (
                 <ExecutionHistoryRow
                   key={entry.id}
                   entry={entry}

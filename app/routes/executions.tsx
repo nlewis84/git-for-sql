@@ -1,7 +1,7 @@
 import { redirect } from "react-router";
 import { json } from "~/lib/json.server";
 import { useLoaderData } from "react-router";
-import type { LoaderFunctionArgs } from "react-router";
+import type { LoaderFunctionArgs, MetaFunction } from "react-router";
 import { getExecutionHistory } from "~/lib/db.server";
 import { getUserFromSession } from "~/lib/auth.server";
 import { useState } from "react";
@@ -27,11 +27,17 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const history = await getExecutionHistory(limit);
 
-  return json({ history });
+  return json({ executions: history, user });
 }
 
+type LoaderData = {
+  executions: Awaited<ReturnType<typeof getExecutionHistory>>;
+  user: NonNullable<Awaited<ReturnType<typeof getUserFromSession>>>;
+};
+
 export default function Executions() {
-  const { history } = useLoaderData<typeof loader>();
+  const data = useLoaderData<LoaderData>();
+  const { executions: history } = data;
   const [selectedEntry, setSelectedEntry] = useState<any>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 

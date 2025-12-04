@@ -7,12 +7,17 @@ import {
   Form,
   useLocation,
 } from "react-router";
-import type { LinksFunction, LoaderFunctionArgs } from "react-router";
+import type {
+  LinksFunction,
+  LoaderFunctionArgs,
+  MetaFunction,
+} from "react-router";
 import { json } from "~/lib/json.server";
 import { useLoaderData } from "react-router";
 import "./tailwind.css";
 import { getUserFromSession } from "~/lib/auth.server";
 import { Lock } from "phosphor-react";
+import { ErrorBoundary } from "~/components/ErrorBoundary";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -29,11 +34,32 @@ export const links: LinksFunction = () => [
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUserFromSession(request);
-  return json({ user });
+  return json({
+    user: user || null,
+  });
 }
 
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Git for SQL - SQL Script Management" },
+    {
+      name: "description",
+      content: "Manage and execute SQL scripts with GitHub integration",
+    },
+  ];
+};
+
+type LoaderData = {
+  user: {
+    username: string;
+    email: string | null;
+    avatar: string;
+    name: string | null;
+  } | null;
+};
+
 export default function App() {
-  const { user } = useLoaderData<typeof loader>();
+  const { user } = useLoaderData<LoaderData>();
   const location = useLocation();
 
   return (
@@ -43,12 +69,6 @@ export default function App() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
-        <style>{`
-          body {
-            background: linear-gradient(135deg, hsl(252, 40%, 96%) 0%, hsl(270, 30%, 97%) 50%, hsl(252, 40%, 96%) 100%);
-            background-attachment: fixed;
-          }
-        `}</style>
       </head>
       <body className="font-sans text-neutral-900 leading-relaxed min-h-screen">
         <header className="bg-white shadow-sm py-4 mb-6">
